@@ -2,13 +2,11 @@ require("dotenv").config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
-const reviewRouter = require('./routers/review.router')
-const storeRouter = require('./routers/store.router')
-const raovatRouter = require('./routers/raovat.router')
-const blogsRouter = require('./routers/blogs.router')
-const usersRouter = require('./routers/users.router')
+
+const shopsRouter = require('./routers/shops.router')
+
 const cors = require('cors');
-const { use } = require("./routers/users.router");
+
 
 
 const app = express()
@@ -27,11 +25,9 @@ app.get('/',(req,res) => {
     res.send('This is server API THE FROG');
 })
 
-app.use('/reviews', reviewRouter);
-app.use('/stores', storeRouter);
-app.use('/raovats', raovatRouter);
-app.use('/blogs', blogsRouter);
-app.use('/users', usersRouter);
+
+app.use('/shops', shopsRouter);
+;
 
 
 app.listen(port, ()=>{

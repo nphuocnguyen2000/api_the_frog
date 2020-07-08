@@ -1,13 +1,38 @@
 
-let Blogs = require('./../models/blogs.model');
-module.exports.index = (req, res) => {
-    Blogs.find()
-      .then(blogs => res.json(blogs))
-      .catch(err => res.status(400).json('Error: ' + err));
+let Shop = require('../models/shops.model');
+const moment = require('moment');
+
+// module.exports.index = (req, res) => {
+   
+//     Store.find()
+//       .then(store => res.json(store))
+//       .catch(err => res.status(400).json('Error: ' + err));
+// }
+module.exports.index= (req, res)=>{
+  var page = parseInt(req.query.page) || 1;
+  var limit = parseInt(req.query.limit) || 5 ;
+  var query = {}
+  if(page < 0 || page === 0) {
+        response = {"error" : true,"message" : "invalid page number, should start with 1"};
+        return res.json(response)
+  }
+  query.skip = limit * (page - 1)
+  query.limit = limit
+  // Find some documents
+       Shop.find({},{},query,function(err,data) {
+        // Mongo command to fetch all data from collection.
+            if(err) {
+                response = {"error" : true,"message" : "Error fetching data"};
+            } else {
+                response = {"error" : false,data};
+            }
+            res.json(response);
+        });
 }
+
 // module.exports.add= (req, res) => {
 //     const image = req.body.image;
-//     const conte,cmmmnt = req.body.content;
+//     const content = req.body.content;
 //     const subContent = req.body.subContent;
 //     const auther = req.body.auther;
 //     const createdAt = Date.parse(req.body.createdAt);

@@ -1,6 +1,6 @@
 const router = require('express').Router();
-let blogsController = require('./../controllers/blogs.controller')
-router.route('/').get(blogsController.index);
+let storeController = require('./../controllers/shops.controller')
+router.route('/').get(storeController.index);
 
 // router.route('/add').post(reviewController.add);
 
