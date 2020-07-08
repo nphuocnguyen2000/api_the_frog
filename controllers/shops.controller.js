@@ -9,8 +9,8 @@ const moment = require('moment');
 //       .catch(err => res.status(400).json('Error: ' + err));
 // }
 module.exports.index= (req, res)=>{
-  var page = parseInt(req.query.page) || 1;
-  var limit = parseInt(req.query.limit) || 5 ;
+  var page = parseInt(req.query.page);
+  var limit = parseInt(req.query.limit) ;
   var query = {}
   if(page < 0 || page === 0) {
         response = {"error" : true,"message" : "invalid page number, should start with 1"};
