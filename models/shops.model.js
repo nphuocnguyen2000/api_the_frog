@@ -7,7 +7,7 @@ const shopSchema = new Schema({
   oldPrice: {type: Number, required: true},
   newPrice: {type: Number, required: true},
   image: {type: String, required: true},
-  category: {type: String, required: true},
+  category: {type: Array, required: true},
   imageArr: {type: Array, required: true},
   quantity: {type: Number, required: true},
   inventory: {type: Number, required: true},
@@ -21,7 +21,7 @@ let temp = [{
   "oldPrice": 316,
   "newPrice": 126,
   "image": "https://product.hstatic.net/1000344185/product/blk-doodle-tee-2_67d29b58c14b4730b9ff2c76cc80be1f_grande.jpg",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -33,7 +33,7 @@ let temp = [{
   "oldPrice": 781,
   "newPrice": 492,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/the-bear-bla-1-w.png",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -45,7 +45,7 @@ let temp = [{
   "oldPrice": 751,
   "newPrice": 421,
   "image": "https://product.hstatic.net/1000344185/product/15-te9512-tx01-2_9e5bd6c9653342dba42d037a67b02f86_grande.jpg",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -57,7 +57,7 @@ let temp = [{
   "oldPrice": 884,
   "newPrice": 249,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/break-new-hoodie-1-w.png",
-  "category": "hoodie",
+  "category": ["hoodie", "all"],
   "imageArr": [
     {
     }
@@ -69,7 +69,7 @@ let temp = [{
   "oldPrice": 236,
   "newPrice": 499,
   "image": "https://slyclothing.vn/wp-content/uploads/2020/06/Surf_tee-2_2-640x768.jpg",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -81,7 +81,7 @@ let temp = [{
   "oldPrice": 312,
   "newPrice": 582,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/track-jacket-bla-1-w.png",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -93,7 +93,7 @@ let temp = [{
   "oldPrice": 947,
   "newPrice": 188,
   "image": "https://bobui.vn/wp/wp-content/uploads/2020/01/5-5-1.jpg",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -105,7 +105,7 @@ let temp = [{
   "oldPrice": 494,
   "newPrice": 453,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/grynch-hoodie-1-ww.png",
-  "category": "hoodie",
+  "category": ["hoodie", "all"],
   "imageArr": [
     {
     }
@@ -117,7 +117,7 @@ let temp = [{
   "oldPrice": 535,
   "newPrice": 436,
   "image": "https://bobui.vn/wp/wp-content/uploads/2020/01/8-5-1-1.jpg",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -129,7 +129,7 @@ let temp = [{
   "oldPrice": 205,
   "newPrice": 572,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/track-pants-bla-1-w.png",
-  "category": "pants",
+  "category": ["pants", "all"],
   "imageArr": [
     {
     }
@@ -141,7 +141,7 @@ let temp = [{
   "oldPrice": 685,
   "newPrice": 282,
   "image": "https://slyclothing.vn/wp-content/uploads/2020/06/SurfSurf_tee-5_2-640x768.jpg",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -153,7 +153,7 @@ let temp = [{
   "oldPrice": 218,
   "newPrice": 584,
   "image": "https://product.hstatic.net/1000344185/product/mountain-jacket-2_4bae4f731af5472aac724ef000b14449_grande.jpg",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -165,7 +165,7 @@ let temp = [{
   "oldPrice": 851,
   "newPrice": 128,
   "image": "https://slyclothing.vn/wp-content/uploads/2020/05/Tee-Signature_cam_2-min-640x768.jpg",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -177,7 +177,7 @@ let temp = [{
   "oldPrice": 332,
   "newPrice": 406,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/renai-jacket-1.png",
-  "category": "jacket",
+  "category": ["jacket", "all"],
   "imageArr": [
     {
     }
@@ -189,7 +189,7 @@ let temp = [{
   "oldPrice": 623,
   "newPrice": 121,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/venom-tie-dye-hoodie-2-w.png",
-  "category": "hoodie",
+  "category": ["hoodie", "all"],
   "imageArr": [
     {
     }
@@ -201,7 +201,7 @@ let temp = [{
   "oldPrice": 841,
   "newPrice": 571,
   "image": "https://slyclothing.vn/wp-content/uploads/2020/06/Surf_tee-6_2-640x768.jpg",
-  "category": "t-shirt",
+  "category": ["t-shirt", "all"],
   "imageArr": [
     {
     }
@@ -213,7 +213,7 @@ let temp = [{
   "oldPrice": 216,
   "newPrice": 260,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/venom-tie-dye-hoodie-1-w.png",
-  "category": "hoodie",
+  "category": ["hoodie", "all"],
   "imageArr": [
     {
     }
@@ -225,7 +225,7 @@ let temp = [{
   "oldPrice": 369,
   "newPrice": 507,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/cargo-pants-blu-1-w.png",
-  "category": "pants",
+  "category": ["pants", "all"],
   "imageArr": [
     {
     }
@@ -237,7 +237,7 @@ let temp = [{
   "oldPrice": 347,
   "newPrice": 483,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/d-shorts-1.png",
-  "category": "shorts",
+  "category": ["shorts", "all"],
   "imageArr": [
     {
     }
@@ -249,7 +249,7 @@ let temp = [{
   "oldPrice": 591,
   "newPrice": 398,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/angel-backpack-1-w.png",
-  "category": "balo",
+  "category": ["balo", "all"],
   "imageArr": [
     {
     }
@@ -261,7 +261,7 @@ let temp = [{
   "oldPrice": 795,
   "newPrice": 542,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/dcs-logo-shorts-bb-1-w.png",
-  "category": "shorts",
+  "category": ["shorts", "all"],
   "imageArr": [
     {
     }
@@ -273,7 +273,7 @@ let temp = [{
   "oldPrice": 228,
   "newPrice": 582,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/aca-backpack-1-w.png",
-  "category": "balo",
+  "category": ["balo", "all"],
   "imageArr": [
     {
     }
@@ -285,7 +285,7 @@ let temp = [{
   "oldPrice": 620,
   "newPrice": 379,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/stripe-track-short-whi-1-w.png",
-  "category": "shorts",
+  "category": ["shorts", "all"],
   "imageArr": [
     {
     }
@@ -297,7 +297,7 @@ let temp = [{
   "oldPrice": 743,
   "newPrice": 450,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/logo-y-backpacks-re-1-w.png",
-  "category": "balo",
+  "category": ["balo", "all"],
   "imageArr": [
     {
     }
@@ -309,7 +309,7 @@ let temp = [{
   "oldPrice": 945,
   "newPrice": 204,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/signature-y-long-wallet-1-w.png",
-  "category": "wallet",
+  "category": ["wallet", "all"],
   "imageArr": [
     {
     }
@@ -321,7 +321,7 @@ let temp = [{
   "oldPrice": 112,
   "newPrice": 423,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/prynamid-backpack-1-w.png",
-  "category": "balo",
+  "category": ["balo", "all"],
   "imageArr": [
     {
     }
@@ -333,7 +333,7 @@ let temp = [{
   "oldPrice": 865,
   "newPrice": 599,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/zipped-long-wallet-sphynx-1-w.png",
-  "category": "wallet",
+  "category": ["wallet", "all"],
   "imageArr": [
     {
     }
@@ -345,7 +345,7 @@ let temp = [{
   "oldPrice": 887,
   "newPrice": 117,
   "image": "http://bizweb.dktcdn.net/thumb/large/100/369/010/products/logo-wallet-1b-w.png",
-  "category": "wallet",
+  "category": ["wallet", "all"],
   "imageArr": [
     {
     }

@@ -9,16 +9,21 @@ let Shop = require('../models/shops.model')
 // }
 module.exports.index= (req, res)=>{
   var page = parseInt(req.query.page);
-  var limit = parseInt(req.query.limit) ;
+  var limit = parseInt(req.query.limit);
+  var category = req.query.category || 'all'
   var query = {}
+  var cate = {}
   if(page < 0 || page === 0) {
         response = {"error" : true,"message" : "invalid page number, should start with 1"};
         return res.json(response)
   }
   query.skip = limit * (page - 1)
   query.limit = limit
+//   category !== 'all' ? cate.category = category : cate.categoryAll = category
+  cate.category = category
+
   // Find some documents
-       Shop.find({},{},query,function(err,data) {
+       Shop.find(cate, {}, query,function(err,data) {
         // Mongo command to fetch all data from collection.
             if(err) {
                 response = {"error" : true,"message" : "Error fetching data"};
