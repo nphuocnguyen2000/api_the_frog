@@ -1,6 +1,5 @@
+let Shop = require('../models/shops.model')
 
-let Shop = require('../models/shops.model');
-const moment = require('moment');
 
 // module.exports.index = (req, res) => {
    
