@@ -10,7 +10,8 @@ let Shop = require('../models/shops.model')
 module.exports.index= (req, res)=>{
   var page = parseInt(req.query.page);
   var limit = parseInt(req.query.limit);
-  var category = req.query.category || 'all'
+  var category = req.query.category || 'all';
+  var id = req.query.id
   var query = {}
   var cate = {}
   if(page < 0 || page === 0) {
@@ -21,7 +22,9 @@ module.exports.index= (req, res)=>{
   query.limit = limit
 //   category !== 'all' ? cate.category = category : cate.categoryAll = category
   cate.category = category
-
+  if(id !== undefined){
+    cate._id = id
+  }
   // Find some documents
        Shop.find(cate, {}, query,function(err,data) {
         // Mongo command to fetch all data from collection.
