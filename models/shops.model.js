@@ -358,7 +358,7 @@ let temp = [{
 //     else
 //     console.log("done")
 // })
-// Shop.deleteMany({quantity: 1},err =>{
+// Shop.deleteMany({category: "wallet"},err =>{
 //     if(err) throw err
 //     else 
 //         console.log('Deleted')
