@@ -36,65 +36,44 @@ const bcrypt = require('bcrypt');
 //         });
 // }
 
-module.exports.add= (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const email = req.body.email;
-    // const subContent = req.body.subContent;
-    // const auther = req.body.auther;
-    // const createdAt = Date.parse(req.body.createdAt);
-  
-    const newReview = new User({
-      username,
-      password,
-      email
-    });
-  
-    newReview.save()
-    .then(() => res.json('Review added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
-  }
-module.exports.register = async (req, res)=>{
-  const { name, email, password, password2 } = req.body;
-  let errors = [];
 
-  if (!name || !email || !password || !password2) {
-    errors.push({ msg: 'Please enter all fields' });
-  }
+module.exports.register = async (req, res)=>{
+  const { firstName, lastName, email,phone, password, password2, } = req.body;
 
   if (password != password2) {
-    errors.push({ msg: 'Passwords do not match' });
+    res.json({errors: true, message: 'Mật khẩu không giống nhau' });
+    return;
   }
-
   if (password.length < 6) {
-    errors.push({ msg: 'Password must be at least 6 characters' });
+    res.json({ errors: true, message: 'Mật khẩu phải từ 6 ký tự trở lên' });
+    return;
   }
 
-  if (errors.length > 0) {
-    res.json(errors);
-  } else {
+  if(firstName && email && password && lastName && phone) {
     User.findOne({ email: email }).then(user => {
       if (user) {
-        errors.push({ msg: 'Email already exists' });
-        res.json(errors);
+        res.json({errors: true,  message: "Email đã tồn tại !" });
+        return;
       } else {
         const newUser = new User({
-          name,
+          firstName,
+          lastName,
           email,
+          phone,
           password
         });
 
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
-           
             newUser.password = hash;
             newUser
               .save()
-              .then(err => {
-                console.log(err)
+              .then(data => {
+                res.json({errors: false, data})
+                
                 // req.json(
-                //   'success_msg',
+                //   'success_message',
                 //   'You are now registered and can log in'
                 // );
                 // res.redirect('/account');
@@ -108,6 +87,8 @@ module.exports.register = async (req, res)=>{
 }
 
 module.exports.login = (req, res)=>{
+  
+    
     const {email, password} = req.body
     if(email && password){
       User.findOne({ email: email })
