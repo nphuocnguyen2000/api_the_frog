@@ -1,6 +1,6 @@
 let User = require('../models/user.model')
 
-
+const bcrypt = require('bcrypt');
 // module.exports.index = (req, res) => {
    
 //     Store.find()
@@ -40,20 +40,73 @@ let User = require('../models/user.model')
 module.exports.add= (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    const email = req.body.email;
     // const subContent = req.body.subContent;
     // const auther = req.body.auther;
     // const createdAt = Date.parse(req.body.createdAt);
   
     const newReview = new User({
       username,
-      password
+      password,
+      email
     });
   
     newReview.save()
     .then(() => res.json('Review added!'))
     .catch(err => res.status(400).json('Error: ' + err));
   }
+module.exports.register = async (req, res)=>{
+  const { name, email, password, password2 } = req.body;
+  let errors = [];
 
+  if (!name || !email || !password || !password2) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+
+  if (password != password2) {
+    errors.push({ msg: 'Passwords do not match' });
+  }
+
+  if (password.length < 6) {
+    errors.push({ msg: 'Password must be at least 6 characters' });
+  }
+
+  if (errors.length > 0) {
+    res.json(errors);
+  } else {
+    User.findOne({ email: email }).then(user => {
+      if (user) {
+        errors.push({ msg: 'Email already exists' });
+        res.json(errors);
+      } else {
+        const newUser = new User({
+          name,
+          email,
+          password
+        });
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+           
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(err => {
+                console.log(err)
+                // req.json(
+                //   'success_msg',
+                //   'You are now registered and can log in'
+                // );
+                res.redirect('/account');
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  }
+}
 //   module.exports.findById = (req, res) => {
 //     Review.findById(req.params.id)
 //       .then(Review => res.json(Review))
