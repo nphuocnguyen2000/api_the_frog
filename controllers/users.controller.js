@@ -98,7 +98,7 @@ module.exports.register = async (req, res)=>{
                 //   'success_msg',
                 //   'You are now registered and can log in'
                 // );
-                res.redirect('/account');
+                // res.redirect('/account');
               })
               .catch(err => console.log(err));
           });
