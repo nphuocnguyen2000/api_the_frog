@@ -119,7 +119,7 @@ module.exports.login = (req, res)=>{
             bcrypt.compare(password, user.password, function(err, result) {
               if(err) throw err;
               if(result){
-                res.send("Login successfully")
+                res.json(user)
               }
               else{
                 res.json("Login failed")
