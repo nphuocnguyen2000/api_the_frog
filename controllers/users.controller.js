@@ -122,7 +122,7 @@ module.exports.login = (req, res)=>{
                 res.json(user)
               }
               else{
-                res.json("Login failed")
+                res.json({errors: false, message: "Login failed"})
               }
             });
             
