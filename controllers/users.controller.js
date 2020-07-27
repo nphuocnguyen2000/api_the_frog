@@ -109,10 +109,7 @@ module.exports.register = async (req, res)=>{
 
 module.exports.login = (req, res)=>{
     const {email, password} = req.body
-    if(!password || !email){
-      res.json("Please enter all fields");
-    }
-    else{
+    if(email && password){
       User.findOne({ email: email })
         .then((user) => {
           if(user){
@@ -128,7 +125,7 @@ module.exports.login = (req, res)=>{
             
           }
           else{
-            res.json('That email is not registered');
+            res.json({errors: true, message: "That email is not registered"});
           }
         })
     }
