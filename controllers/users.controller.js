@@ -1,5 +1,4 @@
 let User = require('../models/user.model')
-
 const bcrypt = require('bcrypt');
 // module.exports.index = (req, res) => {
    
@@ -106,6 +105,34 @@ module.exports.register = async (req, res)=>{
       }
     });
   }
+}
+
+module.exports.login = (req, res)=>{
+    const {email, password} = req.body
+    if(!password || !email){
+      res.json("Please enter all fields");
+    }
+    else{
+      User.findOne({ email: email })
+        .then((user) => {
+          if(user){
+            bcrypt.compare(password, user.password, function(err, result) {
+              if(err) throw err;
+              if(result){
+                res.send("Login successfully")
+              }
+              else{
+                res.json("Login failed")
+              }
+            });
+            
+          }
+          else{
+            res.json('That email is not registered');
+          }
+        })
+    }
+      
 }
 //   module.exports.findById = (req, res) => {
 //     Review.findById(req.params.id)

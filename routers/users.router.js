@@ -2,8 +2,8 @@ const router = require('express').Router();
 
 let userController = require('./../controllers/users.controller')
 
-router.route('/add-user')
-    .post(userController.add);
+router.route('/login')
+    .post(userController.login);
 router.route('/register').post(userController.register);
 // router.route('/add').post(reviewController.add);
 
