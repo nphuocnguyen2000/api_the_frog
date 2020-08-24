@@ -1,116 +1,140 @@
 let User = require('../models/user.model')
-const bcrypt = require('bcrypt');
-// module.exports.index = (req, res) => {
-   
-//     Store.find()
-//       .then(store => res.json(store))
-//       .catch(err => res.status(400).json('Error: ' + err));
-// }
-// module.exports.index= (req, res)=>{
-//   var page = parseInt(req.query.page);
-//   var limit = parseInt(req.query.limit);
-//   var category = req.query.category || 'all';
-//   var id = req.query.id
-//   var query = {}
-//   var cate = {}
-//   if(page < 0 || page === 0) {
-//         response = {"error" : true,"message" : "invalid page number, should start with 1"};
-//         return res.json(response)
-//   }
-//   query.skip = limit * (page - 1)
-//   query.limit = limit
-// //   category !== 'all' ? cate.category = category : cate.categoryAll = category
-//   cate.category = category
-//   if(id !== undefined){
-//     cate._id = id
-//   }
-//   // Find some documents
-//        Shop.find(cate, {}, query,function(err,data) {
-//         // Mongo command to fetch all data from collection.
-//             if(err) {
-//                 response = {"error" : true,"message" : "Error fetching data"};
-//             } else {
-//                 response = {"error" : false,data};
-//             }
-//             res.json(response);
-//         });
-// }
-
+var {hash, compare, compareSync} = require('bcryptjs');
+const DOMAIN = 'sandbox0490235eaa5d419da687f6d72cc5efa4.mailgun.org';
+const nodemailer = require('nodemailer');
+const jwt = require("jsonwebtoken");
 
 module.exports.register = async (req, res)=>{
+
   const { firstName, lastName, email,phone, password, password2, } = req.body;
 
   if (password != password2) {
     res.json({errors: true, message: 'Mật khẩu không giống nhau' });
     return;
   }
+
   if (password.length < 6) {
     res.json({ errors: true, message: 'Mật khẩu phải từ 6 ký tự trở lên' });
     return;
   }
 
-  if(firstName && email && password && lastName && phone) {
-    User.findOne({ email: email }).then(user => {
+  if(firstName && email && password  && lastName && phone) {
+    User.findOne({ email: email }).then( async user => {
+      
       if (user) {
         res.json({errors: true,  message: "Email đã tồn tại !" });
         return;
-      } else {
-        const newUser = new User({
-          firstName,
-          lastName,
-          email,
-          phone,
-          password
-        });
+      } 
 
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser
-              .save()
-              .then(data => {
-                res.json({errors: false, data})
-                
-                // req.json(
-                //   'success_message',
-                //   'You are now registered and can log in'
-                // );
-                // res.redirect('/account');
-              })
-              .catch(err => console.log(err));
-          });
-        });
-      }
-    });
+      else{
+        const token = jwt.sign({firstName,email,password,lastName,phone}, process.env.JWT_ACC_ACTIVATE, {expiresIn: '20m'});
+        
+        const output = `
+        <h1>CHÀO MỪNG ĐẾN VỚI THE FROG</h1>
+            <p>Cảm ơn Anh/chị đã đăng ký tài khoản tại cửa hàng của chúng tôi.</p>
+            <p>Chúng tôi sẽ sử dụng địa chỉ email ${email} của bạn để đăng ký tài khoản tại The Frog</p>
+            <a href="${process.env.CLIENT_URL}/user/register/confirm/${token}" 
+              style="display: flex;
+              text-decoration: none;
+              text-align: center;
+              align-items: center;
+              color: red;
+              font-weight: bold;
+              "
+            >
+              BẤM VÀO ĐÂY ĐỂ XÁC NHẬN
+            </a>
+      `
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'thefrog.vn@gmail.com',
+          pass: '0372924454nguyen...'
+        }
+      });
+      
+      var mailOptions = {
+        from: '"The Frog" <thefrog.vn@gmail.com>',
+        to: email,
+        subject: 'Thông tin đăng ký tài khoản tại The Frog',
+        html: output
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          res.json({errors: true,  message: "Email don't send " });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.json({errors: false,  message: "Email sent" });
+        }
+      });
+    }});
   }
+  else{
+    res.json({errors: true,  message: "Vui lòng điền đầy đủ các trường thông tin !" });
+  }
+}
+module.exports.confirm = async (req, res) => {
+    let {token} = req.params;
+    var decoded = jwt.verify(token, process.env.JWT_ACC_ACTIVATE);
+    const {firstName, lastName, email, phone, password} = decoded;
+    User.findOne({ email: email }).then( async user => {
+      if (user) {
+        res.json({errors: true,  message: "Email đã tồn tại !" });
+        return;
+      } 
+      else{
+        if(decoded.email && decoded.password){
+          let hashPassword = await hash(password, 8);
+          const newUser = new User({
+            firstName,
+            lastName,
+            email,
+            password : hashPassword,
+            phone,
+          });
+          newUser.save(function (err) {
+            if (err){
+              res.json({errors: true, message: "Cannot insert"})
+            }
+            // saved!
+            res.json({errors: true, message: "User inserted"})
+          });
+          
+        }
+        else{
+          res.json({errors: true,  message: "Authentication failed" });
+        }
+      }
+    })
+    
 }
 
 module.exports.login = (req, res)=>{
-  
-    
-    const {email, password} = req.body
+    const {email, password} = req.body;
     if(email && password){
       User.findOne({ email: email })
         .then((user) => {
           if(user){
-            bcrypt.compare(password, user.password, function(err, result) {
+            compare(password, user.password, function(err, result) {
               if(err) throw err;
               if(result){
                 res.json(user)
               }
               else{
-                res.json({errors: true, message: "Login failed"})
+                res.json({errors: true, message: "Login failed. Wrong password"})
               }
-            });
-            
+            }); 
           }
           else{
             res.json({errors: true, message: "That email is not registered"});
           }
         })
-    }
-      
+    } 
+    else{
+      res.json({errors: true, message: "Login failed"})
+    } 
 }
 //   module.exports.findById = (req, res) => {
 //     Review.findById(req.params.id)

@@ -8,8 +8,6 @@ const usersRouter = require('./routers/users.router')
 
 const cors = require('cors');
 
-
-
 const app = express()
 const port = process.env.PORT || 5000;
 
@@ -27,9 +25,9 @@ app.get('/',(req,res) => {
     res.send('This is server API THE FROG');
 })
 
-
 app.use('/shops', shopsRouter);
 app.use('/user', usersRouter);
+
 
 
 app.listen(port, ()=>{
