@@ -97,10 +97,12 @@ module.exports.confirm = async (req, res) => {
           newUser.save(function (err) {
             if (err){
               res.json({errors: true, message: "Cannot insert"})
+            }else{
+              // saved!
+              res.json({errors: true, message: "User inserted"})
+              res.redirect('http://localhost:3000/account')
             }
-            // saved!
-            res.json({errors: true, message: "User inserted"})
-            res.redirect('http://localhost:3000/account')
+            
           });
           
         }
