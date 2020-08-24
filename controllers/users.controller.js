@@ -27,24 +27,35 @@ module.exports.register = async (req, res)=>{
       } 
 
       else{
-        const token = jwt.sign({firstName,email,password,lastName,phone}, process.env.JWT_ACC_ACTIVATE, {expiresIn: '20m'});
-        
-        const output = `
-        <h1>CHÀO MỪNG ĐẾN VỚI THE FROG</h1>
-            <p>Cảm ơn Anh/chị đã đăng ký tài khoản tại cửa hàng của chúng tôi.</p>
-            <p>Chúng tôi sẽ sử dụng địa chỉ email ${email} của bạn để đăng ký tài khoản tại The Frog</p>
-            <a href="${process.env.CLIENT_URL}/user/register/confirm/${token}" 
-              style="display: flex;
-              text-decoration: none;
-              text-align: center;
-              align-items: center;
-              color: red;
-              font-weight: bold;
+      const token = jwt.sign({firstName,email,password,lastName,phone}, process.env.JWT_ACC_ACTIVATE, {expiresIn: '20m'});
+      
+      const output = `
+            <div
+              style="
+                background-color: white;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 50%;
+                border: 1px solid #c4c4c4;
+                border-radius: 10px;
+                overflow: hidden;
+                margin: 0 auto;
               "
             >
-              BẤM VÀO ĐÂY ĐỂ XÁC NHẬN
-            </a>
-      `
+              <h1 style="margin: 0; color:black; display: inline-block; padding: 20px 0; background-color: #888; text-align: center; width: 100%;">Chào mừng đến với The Frog</h1>
+              <div style="padding: 20px">
+                Xin chào ${firstName}  ${lastName},
+                <br>
+                Cảm ơn Anh/chị đã đăng ký tài khoản tại cửa hàng của chúng tôi.
+                <br>
+                Chúng tôi sẽ sử dụng địa chỉ email nphuocnguyen2000@gmail.com của bạn để đăng ký tài khoản tại The Frog
+                      <br>
+                <a href="${ process.env.CLIENT_URL }/user/register/confirm/${token}" style="text-decoration: none; display: block; padding: 10px; background-color: #ccc; text-align: center; font-weight: bold; border-radius: 20px; margin: 5px 0; color: blue;">BẤM VÀO ĐÂY ĐỂ XÁC NHẬN</a>
+              </div>
+            </div>
+        `
+      
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -100,7 +111,7 @@ module.exports.confirm = async (req, res) => {
             }else{
               // saved!
               res.json({errors: true, message: "User inserted"})
-              res.redirect('http://localhost:3000/account')
+              res.redirect('http://localhost:3000/account/register')
             }
             
           });
