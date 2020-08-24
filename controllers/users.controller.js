@@ -48,8 +48,8 @@ module.exports.register = async (req, res)=>{
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'thefrog.vn@gmail.com',
-          pass: '0372924454nguyen...'
+          user: process.env.NODEMAILER_EMAIL,
+          pass: process.env.NODEMAILER_EMAIL_PASSWORD
         }
       });
       
