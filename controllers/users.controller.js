@@ -100,6 +100,7 @@ module.exports.confirm = async (req, res) => {
             }
             // saved!
             res.json({errors: true, message: "User inserted"})
+            res.redirect('http://localhost:3000/account')
           });
           
         }
