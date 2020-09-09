@@ -1,12 +1,13 @@
-let User = require('../models/user.model')
+let Account = require('../models/account.model')
 var {hash, compare, compareSync} = require('bcryptjs');
 const DOMAIN = 'sandbox0490235eaa5d419da687f6d72cc5efa4.mailgun.org';
 const nodemailer = require('nodemailer');
 const jwt = require("jsonwebtoken");
 
+
 module.exports.register = async (req, res)=>{
 
-  const { firstName, lastName, email,phone, password, password2, } = req.body;
+  const { firstName, lastName, email, phone, password, password2, } = req.body;
 
   if (password != password2) {
     res.json({errors: true, message: 'Mật khẩu không giống nhau' });
@@ -19,16 +20,16 @@ module.exports.register = async (req, res)=>{
   }
 
   if(firstName && email && password  && lastName && phone) {
-    User.findOne({ email: email }).then( async user => {
+    Account.findOne({ email: email }).then( async account => {
       
-      if (user) {
+      if (account) {
         res.json({errors: true,  message: "Email đã tồn tại !" });
         return;
       } 
 
       else{
-      const token = jwt.sign({firstName,email,password,lastName,phone}, process.env.JWT_ACC_ACTIVATE, {expiresIn: '20m'});
-      
+      const token = jwt.sign({ firstName,email,password,lastName,phone }, process.env.JWT_ACC_ACTIVATE, { expiresIn: '20m' });
+
       const output = `
             <div
               style="
@@ -51,7 +52,7 @@ module.exports.register = async (req, res)=>{
                 <br>
                 Chúng tôi sẽ sử dụng địa chỉ email nphuocnguyen2000@gmail.com của bạn để đăng ký tài khoản tại The Frog
                       <br>
-                <a href="${ process.env.CLIENT_URL }/user/register/confirm/${token}" style="text-decoration: none; display: block; padding: 10px; background-color: #ccc; text-align: center; font-weight: bold; border-radius: 20px; margin: 5px 0; color: blue;">BẤM VÀO ĐÂY ĐỂ XÁC NHẬN</a>
+                <a href="${ process.env.CLIENT_URL }/Account/register/confirm/${token}" style="text-decoration: none; display: block; padding: 10px; background-color: #ccc; text-align: center; font-weight: bold; border-radius: 20px; margin: 5px 0; color: blue;">BẤM VÀO ĐÂY ĐỂ XÁC NHẬN</a>
               </div>
             </div>
         `
@@ -59,7 +60,7 @@ module.exports.register = async (req, res)=>{
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: process.env.NODEMAILER_EMAIL,
+          account: process.env.NODEMAILER_EMAIL,
           pass: process.env.NODEMAILER_EMAIL_PASSWORD
         }
       });
@@ -73,14 +74,14 @@ module.exports.register = async (req, res)=>{
       
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(error);
           res.json({errors: true,  message: "Email don't send " });
         } else {
           console.log('Email sent: ' + info.response);
           res.json({errors: false,  message: "Email sent" });
         }
       });
-    }});
+      }
+    });
   }
   else{
     res.json({errors: true,  message: "Vui lòng điền đầy đủ các trường thông tin !" });
@@ -89,33 +90,31 @@ module.exports.register = async (req, res)=>{
 module.exports.confirm = async (req, res) => {
     let {token} = req.params;
     var decoded = jwt.verify(token, process.env.JWT_ACC_ACTIVATE);
-    const {firstName, lastName, email, phone, password} = decoded;
-    User.findOne({ email: email }).then( async user => {
-      if (user) {
+    const { firstName, lastName, email, phone, password } = decoded;
+    Account.findOne({ email: email }).then( async account => {
+      if (account) {
         res.json({errors: true,  message: "Email đã tồn tại !" });
         return;
       } 
       else{
         if(decoded.email && decoded.password){
           let hashPassword = await hash(password, 8);
-          const newUser = new User({
+          const newAccount = new Account({
             firstName,
             lastName,
             email,
             password : hashPassword,
             phone,
           });
-          newUser.save(function (err) {
+          newAccount.save(function (err) {
             if (err){
               res.json({errors: true, message: "Cannot insert"})
             }else{
               // saved!
-              res.json({errors: true, message: "User inserted"})
-              res.redirect('http://localhost:3000/account/register')
-            }
-            
-          });
-          
+              res.json({errors: false, message: "Account inserted"})
+              //res.redirect('http://localhost:3000/account')
+            }           
+          });          
         }
         else{
           res.json({errors: true,  message: "Authentication failed" });
@@ -128,13 +127,13 @@ module.exports.confirm = async (req, res) => {
 module.exports.login = (req, res)=>{
     const {email, password} = req.body;
     if(email && password){
-      User.findOne({ email: email })
-        .then((user) => {
-          if(user){
-            compare(password, user.password, function(err, result) {
+      Account.findOne({ email: email })
+        .then((account) => {
+          if(account){
+            compare(password, account.password, function(err, result) {
               if(err) throw err;
               if(result){
-                res.json(user)
+                res.json(account)
               }
               else{
                 res.json({errors: true, message: "Login failed. Wrong password"})
